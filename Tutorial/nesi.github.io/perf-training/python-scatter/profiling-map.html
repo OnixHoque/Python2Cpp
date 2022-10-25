@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Profiling an OpenMP program with MAP</title>
+  <meta name="description" content="Objectives">
+
+<!--  <link rel="stylesheet" type="text/css" href="/perf-training/python-scatter/profiling-map/assets/main.css" />  -->
+<!--  <link rel="stylesheet" href="https://nesi.github.io/hpc_training/assets/main.css">  -->
+<link rel="stylesheet" type="text/css" href="../assets/main.css" />
+
+
+  <link rel="canonical" href="profiling-map.html">
+  <link rel="alternate" type="application/rss+xml" title="New Zealand eScience Infrastructure - Performance Optimisation Training" href="../feed.xml">
+
+    <!-- add border around tables -->
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border:2px solid #000000;
+        }
+
+        th {
+            border:2px solid #000000;
+        }
+
+        td {
+            border:1px solid #000000;
+        }
+    </style>
+
+    <!-- previous/next links -->
+    <style>
+      .PageNavigation {
+        font-size:14px;
+        display: block;
+        width: auto;
+        overflow: hidden;
+      }
+      .PageNavigation a {
+        display: block;
+        width: 50%;
+        float: left;
+        margin: lem 0;
+      }
+      .PageNavigation .next {
+        text-align: right;
+        float: right;
+      }
+    </style>
+
+  
+  <!-- Start of nesi Zendesk Widget script -->
+  <script async="async" id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=27bb1239-2f9a-4a04-b53f-b92f22560adc"> </script>
+  <!-- End of nesi Zendesk Widget script -->
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+
+    <a href="https://www.nesi.org.nz/" class="pull-left">
+    <img class="navbar-logo" src="../assets/img/NeSI_Logo_CMYK.jpg" alt="NeSI logo" />
+          </a>
+
+          <a class="site-title" href="../index.html">New Zealand eScience Infrastructure - Performance Optimisation Training</a>
+
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+            <a class="page-link" href="../about/index.html">About</a>
+            
+          
+            
+            
+            <a class="page-link" href="../python-scatter.html">Python Scatter</a>
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Profiling an OpenMP program with MAP</h1>
+    <p class="post-meta">
+      <time datetime="" itemprop="datePublished">
+        
+        
+      </time>
+      </p>
+  </header>
+
+
+  <div class="post-content" itemprop="articleBody">
+    <ul>
+  <li><a href="profiling-map.html#objectives">Objectives</a></li>
+  <li><a href="profiling-map.html#code-example">Code example</a></li>
+  <li><a href="profiling-map.html#using-map-to-profile-an-openmp-executable">Using MAP to profile an OpenMP executable</a></li>
+  <li><a href="profiling-map.html#exercises">Exercises</a></li>
+  <li><a href="profiling-map.html#interpreting-the-profiling-information">Interpreting the profiling information</a></li>
+  <li><a href="profiling-map.html#exercises-1">Exercises</a></li>
+</ul>
+
+    <h2 id="objectives">Objectives</h2>
+
+<p>You will:</p>
+
+<ul>
+  <li>learn how to use MAP to profile an OpenMP code</li>
+  <li>learn how to interpret MAP multithreaded profiling data</li>
+</ul>
+
+<h2 id="code-example">Code example</h2>
+
+<p>We’ll use the <em>scatter.py</em> code in directory <code class="language-plaintext highlighter-rouge">openmp</code> of the <em>solutions</em> branch. Start by</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git fetch --all
+git checkout solutions
+cd openmp
+</code></pre></div></div>
+
+<h2 id="using-map-to-profile-an-openmp-executable">Using MAP to profile an OpenMP executable</h2>
+
+<p>To use MAP we need to load the <em>forge</em> module in our batch script and insert <code class="language-plaintext highlighter-rouge">map --profile</code> between <code class="language-plaintext highlighter-rouge">srun</code> and the executable. See for example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ml forge
+srun map --profile python scatter.py
+</code></pre></div></div>
+<p>in the Slurm script “scatter.sl”.</p>
+
+<p><strong>Note:</strong> command <code class="language-plaintext highlighter-rouge">map --profile</code> must <em>follow</em> <code class="language-plaintext highlighter-rouge">srun</code> in the case of a serial/threaded program. (For MPI programs <code class="language-plaintext highlighter-rouge">map --profile</code> should <em>precede</em> <code class="language-plaintext highlighter-rouge">srun</code>.)</p>
+
+<blockquote>
+  <h2 id="exercises">Exercises</h2>
+
+  <ul>
+    <li>edit script <code class="language-plaintext highlighter-rouge">scatter.sl</code>:
+      <ul>
+        <li>apply 8 OpenMP threads</li>
+        <li>load module <code class="language-plaintext highlighter-rouge">forge</code></li>
+        <li>add command <code class="language-plaintext highlighter-rouge">map --profile</code> to the executable</li>
+      </ul>
+    </li>
+    <li>submit the job</li>
+  </ul>
+</blockquote>
+
+<h2 id="interpreting-the-profiling-information">Interpreting the profiling information</h2>
+
+<p>Upon execution, a file with subscript <em>.map</em> will be generated. The results can be viewed with the command <em>map</em>,</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map python_scatter_py_1p_1n_8t_2019-05-24_00-00.map
+</code></pre></div></div>
+<p>(the <em>.map</em> file name will vary with each run.)</p>
+
+<p>Below is an example of a profiling data obtained by running <code class="language-plaintext highlighter-rouge">python scatter.py -nx 256 -ny 256</code> and using 8 OpenMP threads.</p>
+
+<p><a href="images/map_8t_trace.png"><img src="images/map_8t_trace.png" alt="top-window-map-8t-trace" /></a>
+On top, the activity window shows the time spent between I/O (orange), serial computing (dark green) and parallel computing (light green). The orange parts amount to initialisation, a one off cost that does not increase with problem size and which is therefore not of great interest here. (Loading shared libraries such as <code class="language-plaintext highlighter-rouge">numpy</code> are responsible for the orange I/O activity.)</p>
+
+<p>More interestingly, we see that 73 percent of the time is spent in the serial part of the code and 9 percent in the parallel part. The parallel part is the one that decreases as we throw more threads to the problem. This suggests that we are close to achieving the maximum scalability of the program with 8 threads - adding more threads can only reduce the execution time by 9 percent at most.</p>
+
+<p>Also of interest, we observe that more than 50 percent of the execution time involves four lines of code (96, 101, 102 and 105). Lines 96, 101 and 102 all are purely serial and involve casting a numpy array into a C pointer which can be passed to a C function. Together these lines consume 36 percent of the execution time.
+<a href="images/map_8t_percents.png"><img src="images/map_8t_percents.png" alt="top-window-map-8t-percents" /></a></p>
+
+<blockquote>
+  <h2 id="exercises-1">Exercises</h2>
+  <ul>
+    <li>edit scatter.py:
+      <ul>
+        <li>remove lines 101 and 102 (which are superfluous)</li>
+        <li>move line 96 out of the loop (<em>kvec</em> is constant)</li>
+      </ul>
+    </li>
+    <li>regenerate the profiling data and compare the newly obtained profiling data with the previously obtained data
+      <ul>
+        <li>how did the contributions of parallel and serial execution times relative to the total time change?</li>
+        <li>how did the the contribution of function <code class="language-plaintext highlighter-rouge">computeScatterWave</code> to the total execution time change?</li>
+      </ul>
+    </li>
+  </ul>
+</blockquote>
+
+
+  </div>
+
+  <hr />
+  
+  
+
+  <div class="PageNavigation">
+    
+      <a class="prev" href="profiling-mpi-map.html">&laquo; Profiling an MPI program with MAP</a>
+    
+    
+      <a class="next" href="vectorising.html">Vectorising &raquo;</a>
+    
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">New Zealand eScience Infrastructure - Performance Optimisation Training</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              New Zealand eScience Infrastructure - Performance Optimisation Training
+            
+            </li>
+            
+            <li><a href="mailto:training@nesi.org.nz">training@nesi.org.nz</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/nesi_nz"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">nesi_nz</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Training materials for a hands-on workshop on Performance Optimisation
+</p>
+      </div>
+    </div>
+
+    <div class="footer-col"> 
+
+      <img class="navbar-logo" src="../assets/img/NeSI_Icon_Brand_expression_H_RGB.png" alt="NeSI logo" />
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

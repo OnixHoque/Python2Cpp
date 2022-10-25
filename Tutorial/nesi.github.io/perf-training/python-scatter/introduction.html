@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Introduction</title>
+  <meta name="description" content="Aim of this training">
+
+<!--  <link rel="stylesheet" type="text/css" href="/perf-training/python-scatter/introduction/assets/main.css" />  -->
+<!--  <link rel="stylesheet" href="https://nesi.github.io/hpc_training/assets/main.css">  -->
+<link rel="stylesheet" type="text/css" href="../assets/main.css" />
+
+
+  <link rel="canonical" href="introduction.html">
+  <link rel="alternate" type="application/rss+xml" title="New Zealand eScience Infrastructure - Performance Optimisation Training" href="../feed.xml">
+
+    <!-- add border around tables -->
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border:2px solid #000000;
+        }
+
+        th {
+            border:2px solid #000000;
+        }
+
+        td {
+            border:1px solid #000000;
+        }
+    </style>
+
+    <!-- previous/next links -->
+    <style>
+      .PageNavigation {
+        font-size:14px;
+        display: block;
+        width: auto;
+        overflow: hidden;
+      }
+      .PageNavigation a {
+        display: block;
+        width: 50%;
+        float: left;
+        margin: lem 0;
+      }
+      .PageNavigation .next {
+        text-align: right;
+        float: right;
+      }
+    </style>
+
+  
+  <!-- Start of nesi Zendesk Widget script -->
+  <script async="async" id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=27bb1239-2f9a-4a04-b53f-b92f22560adc"> </script>
+  <!-- End of nesi Zendesk Widget script -->
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+
+    <a href="https://www.nesi.org.nz/" class="pull-left">
+    <img class="navbar-logo" src="../assets/img/NeSI_Logo_CMYK.jpg" alt="NeSI logo" />
+          </a>
+
+          <a class="site-title" href="../index.html">New Zealand eScience Infrastructure - Performance Optimisation Training</a>
+
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+            <a class="page-link" href="../about/index.html">About</a>
+            
+          
+            
+            
+            <a class="page-link" href="../python-scatter.html">Python Scatter</a>
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Introduction</h1>
+    <p class="post-meta">
+      <time datetime="" itemprop="datePublished">
+        
+        
+      </time>
+      </p>
+  </header>
+
+
+  <div class="post-content" itemprop="articleBody">
+    <ul>
+  <li><a href="introduction.html#aim-of-this-training">Aim of this training</a></li>
+  <li><a href="introduction.html#prerequisites">Prerequisites</a></li>
+  <li><a href="introduction.html#getting-ready">Getting ready</a></li>
+  <li><a href="introduction.html#scattering-wave-example-problem">Scattering wave example problem</a></li>
+  <li><a href="introduction.html#checking-out-the-code">Checking out the code</a>
+    <ul>
+      <li><a href="introduction.html#how-to-run-the-scatter-code">How to run the scatter code</a></li>
+      <li><a href="introduction.html#complexity-of-the-scatter-code">Complexity of the scatter code</a></li>
+      <li><a href="introduction.html#how-to-check-if-the-results-have-changed">How to check if the results have changed</a></li>
+      <li><a href="introduction.html#adjusting-the-domain-size-and-contour-resolution-to-control-the-execution-time">Adjusting the domain size and contour resolution to control the execution time</a></li>
+    </ul>
+  </li>
+  <li><a href="introduction.html#exercises">Exercises</a></li>
+</ul>
+
+    <h2 id="aim-of-this-training">Aim of this training</h2>
+
+<p>Learn how to write Python programs that run efficiently on high performance computers. At the end of this training you will:</p>
+
+<ul>
+  <li>be able to identify performance bottlenecks in your application</li>
+  <li>understand that there are many ways to write a program (but some ways are better than others)</li>
+  <li>know how to apply different strategies to get your code to run faster</li>
+</ul>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>To take this training you will need:</p>
+
+<ul>
+  <li>to be able to log into a Unix computer (and submit jobs if connected to a NeSI computer)</li>
+  <li>be comfortable with typing Unix and git commands</li>
+  <li>know how to use an editor</li>
+  <li>have some knowledge of Python and C/C++</li>
+</ul>
+
+<h2 id="getting-ready">Getting ready</h2>
+
+<p>We will require Python 3 with external packages installed. On NeSI’s Mahuika Cray CS400 cluster do:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module load Anaconda3 Boost forge
+</code></pre></div></div>
+
+<h2 id="scattering-wave-example-problem">Scattering wave example problem</h2>
+
+<p>We will run the <em>scatter</em> code, which computes the scattering of a plane wave against a two-dimensional obstacle</p>
+
+<p><a href="https://nesi.github.io/perf-training/python-scatter/images/wave.png"><img src="images/waves.png" alt="Waves sloshing on an obstacle" /></a></p>
+
+<p>As the incoming wave moves from left to right, it encounters the obstacle,<br />
+represented by segments, each partially reflecting and scattering the wave. 
+The sum of the contributions from each segments gives the total scattered wave.</p>
+
+<h2 id="checking-out-the-code">Checking out the code</h2>
+
+<p>Clone and switch to the repository:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/pletzer/scatter.git scatter
+cd scatter
+</code></pre></div></div>
+
+<p>Under the <code class="language-plaintext highlighter-rouge">scatter</code>, you will find several implementations of the same problem.</p>
+
+<h3 id="how-to-run-the-scatter-code">How to run the scatter code</h3>
+
+<p>We’ll start by running the original version of the code, which is entirely written in Python</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd original
+</code></pre></div></div>
+
+<p>To submit a job to the Slurm scheduler, type:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbatch scatter.sl
+</code></pre></div></div>
+
+<p>Note: you might have to edit <code class="language-plaintext highlighter-rouge">scatter.sl</code> and add <code class="language-plaintext highlighter-rouge">#SBATCH --account="myAccount"</code> as well as other options. <a href="https://support.nesi.org.nz/hc/en-gb/articles/360000359576-Slurm-Usage-A-Primer">See here</a> for more information.</p>
+
+<h3 id="complexity-of-the-scatter-code">Complexity of the scatter code</h3>
+
+<p>At the core of the scatter algorithm are two nested loops, over the vertical <code class="language-plaintext highlighter-rouge">j</code> and horizontal <code class="language-plaintext highlighter-rouge">i</code> grid indices. For each node of the grid, the incident and scattered wave components are computed. The scattered component is the sum of the contributions from all line segments making up the obstacle contour. Hence, the complexity of the code is N^3 where N is the number of x and y grid points, and the number of segments.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ny</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">yg</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">xg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="c1"># need to check that x,y are outside contour
+</span>        <span class="c1"># otherwise continue
+</span>        <span class="n">p</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,])</span>
+
+        <span class="c1"># skip if point is inside closed contour
+</span>        <span class="k">if</span> <span class="n">isInsideContour</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="n">yc</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">inci</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">incident</span><span class="p">(</span><span class="n">kvec</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">scat</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">computeScatteredWave</span><span class="p">(</span><span class="n">kvec</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="n">yc</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="how-to-check-if-the-results-have-changed">How to check if the results have changed</h3>
+
+<p>When modifying the code, it is important to check that the results haven’t changed. Use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python scatter.py -checksum
+</code></pre></div></div>
+<p>to record the sum of the field values squared (in this case 4686.33935546875).</p>
+
+<p>Note: the check sum changes with resolution and other parameters, see below.</p>
+
+<h3 id="adjusting-the-domain-size-and-contour-resolution-to-control-the-execution-time">Adjusting the domain size and contour resolution to control the execution time</h3>
+
+<p>As you modify the code you will find it useful to reduce the problem size in order to quickly check that the output has not changed. Likewise you may find it useful to increase the resolution as you improve the code’s performance.</p>
+
+<p>Changing the problem size can be done by passing command line options to <code class="language-plaintext highlighter-rouge">scatter.py</code>. Type <code class="language-plaintext highlighter-rouge">python scatter.py -h</code> to see the full list of options. The options that control the grid size are <code class="language-plaintext highlighter-rouge">-nx # -ny #</code> for the number of cells in the x and y direction. Option <code class="language-plaintext highlighter-rouge">-nc #</code> sets the number of segments.</p>
+
+<p>The default values are <code class="language-plaintext highlighter-rouge">-nx 128</code>, <code class="language-plaintext highlighter-rouge">-ny 128</code> and <code class="language-plaintext highlighter-rouge">-nc 128</code>.</p>
+
+<blockquote>
+  <h2 id="exercises">Exercises</h2>
+  <ul>
+    <li>what is the execution time of the default problem resolution (128x128 and 128 segments)?</li>
+    <li>modify the scatter.sl script to run with 64x64 and 64 segments. What is the new execution time?</li>
+    <li>how does the smaller problem execution time compare with the previous execution time?</li>
+  </ul>
+</blockquote>
+
+
+  </div>
+
+  <hr />
+  
+  
+
+  <div class="PageNavigation">
+    
+    
+      <a class="next" href="profiling.html">Introduction to profiling &raquo;</a>
+    
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">New Zealand eScience Infrastructure - Performance Optimisation Training</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              New Zealand eScience Infrastructure - Performance Optimisation Training
+            
+            </li>
+            
+            <li><a href="mailto:training@nesi.org.nz">training@nesi.org.nz</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/nesi_nz"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">nesi_nz</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Training materials for a hands-on workshop on Performance Optimisation
+</p>
+      </div>
+    </div>
+
+    <div class="footer-col"> 
+
+      <img class="navbar-logo" src="../assets/img/NeSI_Icon_Brand_expression_H_RGB.png" alt="NeSI logo" />
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

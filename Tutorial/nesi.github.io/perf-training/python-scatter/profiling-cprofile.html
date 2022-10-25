@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Profiling with Python tools</title>
+  <meta name="description" content="Objectives">
+
+<!--  <link rel="stylesheet" type="text/css" href="/perf-training/python-scatter/profiling-cprofile/assets/main.css" />  -->
+<!--  <link rel="stylesheet" href="https://nesi.github.io/hpc_training/assets/main.css">  -->
+<link rel="stylesheet" type="text/css" href="../assets/main.css" />
+
+
+  <link rel="canonical" href="profiling-cprofile.html">
+  <link rel="alternate" type="application/rss+xml" title="New Zealand eScience Infrastructure - Performance Optimisation Training" href="../feed.xml">
+
+    <!-- add border around tables -->
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border:2px solid #000000;
+        }
+
+        th {
+            border:2px solid #000000;
+        }
+
+        td {
+            border:1px solid #000000;
+        }
+    </style>
+
+    <!-- previous/next links -->
+    <style>
+      .PageNavigation {
+        font-size:14px;
+        display: block;
+        width: auto;
+        overflow: hidden;
+      }
+      .PageNavigation a {
+        display: block;
+        width: 50%;
+        float: left;
+        margin: lem 0;
+      }
+      .PageNavigation .next {
+        text-align: right;
+        float: right;
+      }
+    </style>
+
+  
+  <!-- Start of nesi Zendesk Widget script -->
+  <script async="async" id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=27bb1239-2f9a-4a04-b53f-b92f22560adc"> </script>
+  <!-- End of nesi Zendesk Widget script -->
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+
+    <a href="https://www.nesi.org.nz/" class="pull-left">
+    <img class="navbar-logo" src="../assets/img/NeSI_Logo_CMYK.jpg" alt="NeSI logo" />
+          </a>
+
+          <a class="site-title" href="../index.html">New Zealand eScience Infrastructure - Performance Optimisation Training</a>
+
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+            <a class="page-link" href="../about/index.html">About</a>
+            
+          
+            
+            
+            <a class="page-link" href="../python-scatter.html">Python Scatter</a>
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Profiling with Python tools</h1>
+    <p class="post-meta">
+      <time datetime="" itemprop="datePublished">
+        
+        
+      </time>
+      </p>
+  </header>
+
+
+  <div class="post-content" itemprop="articleBody">
+    <ul>
+  <li><a href="profiling-cprofile.html#objectives">Objectives</a></li>
+  <li><a href="profiling-cprofile.html#profiling-python-code-with-cprofile">Profiling Python code with <em>cProfile</em></a>
+    <ul>
+      <li><a href="profiling-cprofile.html#visualising-the-profiling-output-with-gprof2dot">Visualising the profiling output with <em>gprof2dot</em></a></li>
+      <li><a href="profiling-cprofile.html#interpreting-the-gprof2dot-output">Interpreting the <em>gprof2dot</em> output</a></li>
+    </ul>
+  </li>
+  <li><a href="profiling-cprofile.html#profiling-python-code-with-line_profiler">Profiling Python code with <em>line_profiler</em></a>
+    <ul>
+      <li><a href="profiling-cprofile.html#interpreting-line_profiler-output">Interpreting <em>line_profiler</em> output</a></li>
+    </ul>
+  </li>
+  <li><a href="profiling-cprofile.html#memory-profiler">Memory Profiler</a></li>
+  <li><a href="profiling-cprofile.html#exercises">Exercises</a></li>
+</ul>
+
+    <h2 id="objectives">Objectives</h2>
+
+<p>You will:</p>
+
+<ul>
+  <li>learn how to gather profiling data using cProfile</li>
+  <li>learn how to visualise profiling data</li>
+  <li>learn how to interpret profiling data</li>
+</ul>
+
+<p>Here we’ll profile the scatter code to identify the sections of the code where most the execution time is spent.</p>
+
+<p>We’ll use the code in directory <code class="language-plaintext highlighter-rouge">original</code>. Start with the command</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd original
+</code></pre></div></div>
+
+<h2 id="profiling-python-code-with-cprofile">Profiling Python code with <em>cProfile</em></h2>
+
+<p>The <em>cProfile</em> profiler is one implementation of the Python profiling interface.
+It measures the time spent within functions and the number of calls made to them.</p>
+
+<p><strong>Note:</strong> The timing information should not be taken as absolute values, since
+the profiling itself could possibly extend the run time in some cases.</p>
+
+<p>Run the following command to profile the code:</p>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">python scatter.py</code> with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python -m cProfile -o output.pstats scatter.py
+</code></pre></div></div>
+<p>in your Slurm script or when running interactively. Additional arguments can be passed to the <em>scatter.py</em> at the end if needed.</p>
+
+<p>Notice the two options in the above command.</p>
+<ul>
+  <li>-m cProfile :
+the -m option specifies the python module to run as a script - this allows us to run cProfile from the command-line</li>
+  <li>-o output.pstats : the -o option specifies that the  profiling results be written to the named file</li>
+</ul>
+
+<p>If you leave out these options the code will just run normally.</p>
+
+<p>A nice way to visualise the  <em>output.pstats</em> file is with <em>gprof2dot</em>.</p>
+
+<h3 id="visualising-the-profiling-output-with-gprof2dot">Visualising the profiling output with <em>gprof2dot</em></h3>
+
+<p><strong>Note:</strong> You will need programs <code class="language-plaintext highlighter-rouge">gprof2dot</code> and <code class="language-plaintext highlighter-rouge">dot</code>, which are available on Mahuika and Maui. On other systems, use <code class="language-plaintext highlighter-rouge">conda install gprof2dot</code> to install <em>gprof2dot</em> and <code class="language-plaintext highlighter-rouge">conda install graphviz</code> to install <em>Graphviz</em> which provides the <em>dot</em> command.</p>
+
+<p>Run <code class="language-plaintext highlighter-rouge">gprof2dot</code> to generate a PNG image file:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gprof2dot --colour-nodes-by-selftime -f pstats output.pstats | \
+    dot -Tpng -o output.png
+</code></pre></div></div>
+
+<p>On Maui, generate an EPS image</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gprof2dot --colour-nodes-by-selftime -f pstats output.pstats | \
+    dot -Teps -o output.eps
+</code></pre></div></div>
+<p>as you would otherwise get message <code class="language-plaintext highlighter-rouge">Format: "png" not recognized.</code></p>
+
+<p>Now view <em>output.png</em> with the command <code class="language-plaintext highlighter-rouge">display output.png</code> on Mahuika (or <code class="language-plaintext highlighter-rouge">display output.eps</code> on Maui)
+if you have enabled X11-forwarding in your 
+<code class="language-plaintext highlighter-rouge">ssh</code> command. Alternatively, you can copy the file your local machine and open it there.</p>
+
+<p>The image should look something like this:</p>
+
+<p><a href="images/scatter-profile.png"><img src="images/scatter-profile.png" alt="profiling-results" /></a></p>
+
+<h3 id="interpreting-the-gprof2dot-output">Interpreting the <em>gprof2dot</em> output</h3>
+
+<p>What the image shows:</p>
+
+<ul>
+  <li>Each box represents a function from the input file, and contains information on:
+    <ul>
+      <li>the percentage of total run time spent in this function, including time
+spent in other functions that are called by this function</li>
+      <li>(in brackets) the percentage of total run time spent in this function
+only, i.e. excluding time spent in other functions that are called by this
+function. We call this <em>self time</em></li>
+      <li>the number of times this function was called</li>
+    </ul>
+  </li>
+  <li>Arrows indicate which functions are called by other functions
+    <ul>
+      <li>information about the number of times called and percentage of total run
+time</li>
+    </ul>
+  </li>
+  <li>We used the option <code class="language-plaintext highlighter-rouge">--colour-nodes-by-selftime</code>, so boxes are coloured by
+self time (the number in brackets)
+    <ul>
+      <li>red coloured boxes correspond to functions where the most time is spent</li>
+      <li>blue boxes correspond to functions where the least time is spent</li>
+    </ul>
+  </li>
+  <li>Some functions that take a very low percentage of total run time may not
+show up</li>
+</ul>
+
+<p>What to look for:</p>
+
+<ul>
+  <li>Typically you would look for functions that have a lot of <em>self</em> time (the
+number in brackets). We call these functions <em>hotspots</em>.
+    <ul>
+      <li>58.31% of total time is spent in <code class="language-plaintext highlighter-rouge">computeScatteredWaveElement</code> (the red
+box), so this would be a good place to start when trying to optimise this
+code.</li>
+    </ul>
+  </li>
+  <li>Sometimes functions show up from libraries that you call (e.g. <em>scipy</em> or
+<em>numpy</em>), for example the green box calling <code class="language-plaintext highlighter-rouge">dot</code> that takes 10.82% total
+time.
+    <ul>
+      <li>Usually you don’t want to change code from external libraries, but you can
+see which of your functions call an external library function by going back along the
+arrow from that function. You might be able to optimise the way your code calls the external
+function, use a more optimised library, or remove the call entirely.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="profiling-python-code-with-line_profiler">Profiling Python code with <em>line_profiler</em></h2>
+
+<p>The <em>cProfile</em> tool only times function calls. This is a good first step to
+find hotspots in your code (and often this is enough by itself). However, in
+some cases knowing that a particular function takes a lot of time is not
+particularly helpful. For example, it could be a very long function with multiple loops and computations.</p>
+
+<p><em>line_profiler</em> is a python profiler for doing line-by-line profiling.
+Typically, you would use <em>line_profiler</em> to gather more information about functions
+that <em>cProfile</em> has identified as hotspots.
+To use it, you modify the source code of your python file slightly to specify which
+functions are to be profiled. <em>line_profiler</em> will time the execution of individual lines
+within these designated functions.</p>
+
+<p><strong>Note:</strong> <em>line_profiler</em> is installed in the Python module we loaded earlier.
+You can check that it is installed by running <code class="language-plaintext highlighter-rouge">kernprof --help</code>, which should print
+help information for the <code class="language-plaintext highlighter-rouge">kernprof</code> (<em>line_profiler</em>) program that we are going
+to use. (If not then <code class="language-plaintext highlighter-rouge">pip install line_profiler</code>.)</p>
+
+<p>To demonstrate the use of <em>line_profiler</em> we will use it to profile the
+<code class="language-plaintext highlighter-rouge">isInsideContour</code> function in the file <em>scatter.py</em>.</p>
+
+<p><strong>Note:</strong> we choose this function because it is short, which means we can
+include the output here and explain it.</p>
+
+<ol>
+  <li>Edit the file <em>scatter.py</em>. Find the line that starts with:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def isInsideContour(p, xc, yc):
+</code></pre></div>    </div>
+    <p>On the previous line add <code class="language-plaintext highlighter-rouge">@profile</code>, which is known as a <em>decorator</em> and
+tells <em>line_profiler</em> that we want to profile this function:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@profile
+def isInsideContour(p, xc, yc):
+</code></pre></div>    </div>
+  </li>
+  <li>Run <em>line_profiler</em>:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kernprof -l -v scatter.py
+</code></pre></div>    </div>
+    <p>The <code class="language-plaintext highlighter-rouge">-l</code> flag tells <em>line_profiler</em> to do line-by-line profiling and <code class="language-plaintext highlighter-rouge">-v</code>
+tells it to print the profiling information out at the end of the run.</p>
+  </li>
+</ol>
+
+<p>Detailed documentation about <em>line_profiler</em> can be found
+<a href="https://github.com/rkern/line_profiler">here</a>.</p>
+
+<h3 id="interpreting-line_profiler-output">Interpreting <em>line_profiler</em> output</h3>
+
+<p>You should see something like this after <em>line_profiler</em> has run:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Wrote profile results to scatter.py.lprof
+Timer unit: 1e-06 s
+
+Total time: 13.3867 s
+File: scatter.py
+Function: isInsideContour at line 28
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    28                                           @profile
+    29                                           def isInsideContour(p, xc, yc):
+    30                                               """
+    31                                               Check if a point is inside closed contour
+    32                                           
+    33                                               @param p point (2d array)
+    34                                               @param xc array of x points, anticlockwise and must close
+    35                                               @param yc array of y points, anticlockwise and must close
+    36                                               @return True if p is inside, False otherwise
+    37                                               """
+    38     16641      12437.0      0.7      0.1      inside = True
+    39   2146689     741826.0      0.3      5.5      for i0 in range(len(xc) - 1):
+    40   2130048     766306.0      0.4      5.7          i1 = i0 + 1
+    41   2130048    4790410.0      2.2     35.8          a = numpy.array([xc[i0], yc[i0]]) - p[:2]
+    42   2130048    4702409.0      2.2     35.1          b = numpy.array([xc[i1], yc[i1]]) - p[:2]
+    43                                                   # point is outside if any of the triangle extending from the point to the segment
+    44                                                   # has negative area (cross product &lt; 0)
+    45                                                   # count a point on the contour as being outside (cross product == 0)
+    46   2130048    2367141.0      1.1     17.7          inside &amp;= (a[0]*b[1] - a[1]*b[0] &gt; 1.e-10)
+    47     16641       6180.0      0.4      0.0      return inside
+</code></pre></div></div>
+
+<ul>
+  <li>Line numbers and the contents of each line are shown</li>
+  <li>The “% Time” column is useful; it shows the percentage of time in that
+function that was spent on that line. Here lines 41-42 dominate.</li>
+  <li>“Hits” shows the number of times that line was run</li>
+  <li>We can see that lines 41, 42 and 46 each take around 35%, 35% and 17% of the time spent
+in this function respectively.</li>
+</ul>
+
+<h2 id="memory-profiler">Memory Profiler</h2>
+
+<p>There is another useful Python profiling tool called <a href="https://pypi.org/project/memory_profiler/">memory_profiler</a>,
+which can monitor memory consumption in a Python script on a line-by-line basis.
+The memory profiler tool is used in a similar way to the <em>line_profiler</em> tool we
+already covered, i.e. you have to use the <code class="language-plaintext highlighter-rouge">@profile</code> decorator to explicitly
+tell <em>memory_profiler</em> which functions you wish to profile.</p>
+
+<p>We will not cover memory profiler in detail here but more information can be found
+at the page linked above.</p>
+
+<blockquote>
+  <h2 id="exercises">Exercises</h2>
+  <ul>
+    <li>how much self time in percent is spent in <code class="language-plaintext highlighter-rouge">computeScatteredWave</code>?</li>
+    <li>how much total time in percent is spent in <code class="language-plaintext highlighter-rouge">computeScatteredWave</code>?</li>
+    <li>does it make sense to focus optimisation efforts on <code class="language-plaintext highlighter-rouge">computeScatteredWave</code>?</li>
+  </ul>
+</blockquote>
+
+  </div>
+
+  <hr />
+  
+  
+
+  <div class="PageNavigation">
+    
+      <a class="prev" href="profiling.html">&laquo; Introduction to profiling</a>
+    
+    
+      <a class="next" href="profiling-mpi-map.html">Profiling an MPI program with MAP &raquo;</a>
+    
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">New Zealand eScience Infrastructure - Performance Optimisation Training</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              New Zealand eScience Infrastructure - Performance Optimisation Training
+            
+            </li>
+            
+            <li><a href="mailto:training@nesi.org.nz">training@nesi.org.nz</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/nesi_nz"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">nesi_nz</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Training materials for a hands-on workshop on Performance Optimisation
+</p>
+      </div>
+    </div>
+
+    <div class="footer-col"> 
+
+      <img class="navbar-logo" src="../assets/img/NeSI_Icon_Brand_expression_H_RGB.png" alt="NeSI logo" />
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
