@@ -1,0 +1,1 @@
+gcc -o libmygraph.so -fpic -shared mygraphlibrary.cpp
