@@ -1,0 +1,2 @@
+g++ -c -fPIC mygraphlibrary.cpp -o mygraphlibrary.o
+g++ -shared -Wl,-soname,libmygraphlibrary.so -o libmygraphlibrary.so mygraphlibrary.o

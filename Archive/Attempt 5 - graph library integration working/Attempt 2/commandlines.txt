@@ -1,0 +1,4 @@
+g++ -c -fPIC foo.cpp -o foo.o
+g++ -shared -Wl,-soname,libfoo.so -o libfoo.so foo.o
+
+Read More: https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html
