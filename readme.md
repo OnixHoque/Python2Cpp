@@ -1,6 +1,6 @@
-# Accessing Cpp Graph Library from Python
+# Accessing C++ Library from Python Code
 
-This repo demonstrats how we can use a Cpp library from Python by generating a shared object of the Cpp file. This can be done directly by adding a few extra flags in gcc, or using setuptools library provided in Python. The later is a more cleaner approach.
+This repo demonstrats how we can use a C++ library from Python by generating a Cpp shared object. This can be done directly by adding a few extra flags in gcc, or using setuptools library provided in Python. The later is a much cleaner approach.
 
 The Cpp library is a simple Graph class that creates adjacency matrix dynamically through constructor. It also has other utility functions for printing the graph, setting edge, and freeing/disposing the dynamic memory.
 
@@ -11,7 +11,7 @@ The Cpp library is a simple Graph class that creates adjacency matrix dynamicall
 - `g++ -c -fPIC mygraph.cpp -o mygraph.o`
 - `g++ -shared -Wl,-soname,libmygraph.so -o libmygraph.so mygraph.o`
 
-	Note: The generated shared object file's name should start with *lib*
+	Note: Conventionally, the generated shared object file's name should start with *lib*.
 
 2. Run `test.py` to check if the graph is being used correctly. The `mygraph.py` works as a wrapper for the cpp library.
 
@@ -29,7 +29,7 @@ or
 
 
 
-## Special thanks to the following tutorials:
+## Special thanks to the following tutorials
 - https://nesi.github.io/perf-training/python-scatter/ctypes
 - https://www.auctoris.co.uk/2017/04/29/calling-c-classes-from-python-with-ctypes/
 
