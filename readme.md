@@ -27,10 +27,10 @@ or
 
 2. Run `test.py` to check if the graph is being used correctly. The `mygraph.py` works as a wrapper for the cpp library.
 
----
 
-Special thanks to the following tutorials: 
-- 
+
+## Special thanks to the following tutorials:
+- https://nesi.github.io/perf-training/python-scatter/ctypes
 - https://www.auctoris.co.uk/2017/04/29/calling-c-classes-from-python-with-ctypes/
 
 Read More: https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html
