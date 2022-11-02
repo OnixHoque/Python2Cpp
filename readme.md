@@ -6,7 +6,7 @@ The Cpp library is a simple Graph class that creates adjacency matrix dynamicall
 
 ## Compile the shared object using gcc.
 
-1. Run the following commands to generate shared object from mygraph.cpp file.
+1. Run the following commands to generate shared object from mygraph.cpp file (or just run the bash script `generate_so_file.sh`).
 
 - `g++ -c -fPIC mygraph.cpp -o mygraph.o`
 - `g++ -shared -Wl,-soname,libmygraph.so -o libmygraph.so mygraph.o`
@@ -17,7 +17,7 @@ The Cpp library is a simple Graph class that creates adjacency matrix dynamicall
 
 ## Compile the shared object through Python setuptools
 
-1. Run the following command to generate shared object from mygraph.cpp file. It will be generated in `\build\*\` folder. In this case, the name of the shared object is automatically generated.
+1. Run the following command to generate shared object from mygraph.cpp file. It will be generated in `\build\*\` folder (or just run the bash script `generate_so_file.sh`). In this case, the name of the shared object is automatically generated. 
 
 - `python3 setup.py build`
 or
