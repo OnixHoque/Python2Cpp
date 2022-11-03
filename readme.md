@@ -2,6 +2,7 @@
 
 This repo demonstrats how we can use a C++ library from Python by generating a Cpp shared object. This can be done directly by adding a few extra flags in gcc, or using setuptools library provided in Python. The later is a much cleaner approach.
 
+
 The Cpp library is a simple Graph class that creates adjacency matrix dynamically through constructor. It also has other utility functions for printing the graph, setting edge, and freeing/disposing the dynamic memory.
 
 ## Compile the shared object using gcc.
