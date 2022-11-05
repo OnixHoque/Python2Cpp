@@ -19,7 +19,7 @@ The Cpp library is a simple Graph class that creates adjacency matrix dynamicall
 
 ## Compile the shared object through Python setuptools
 
-1. Run the following command to generate shared object from mygraph.cpp file. It will be generated in `\build\*\` folder (or just run the `make` command). In this case, the name of the shared object is automatically generated. 
+1. Run the following command to generate shared object from mygraph.cpp file (or just run the `make` command). It will be generated in `\build\*\` folder. In this case, the name of the shared object is automatically generated. 
 
 - `python3 setup.py build`
 or
@@ -34,5 +34,7 @@ or
 ## Special thanks to the following tutorials
 - https://nesi.github.io/perf-training/python-scatter/ctypes
 - https://www.auctoris.co.uk/2017/04/29/calling-c-classes-from-python-with-ctypes/
+- https://gist.github.com/Nican/5198719
+- https://princekfrancis.medium.com/passing-a-callback-function-from-python-to-c-351ac944e041
 
 Read More: https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html
