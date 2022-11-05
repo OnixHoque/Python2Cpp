@@ -2,23 +2,24 @@
 
 This repo demonstrats how we can use a C++ library from Python by generating a Cpp shared object. This can be done directly by adding a few extra flags in gcc, or using setuptools library provided in Python. The later is a much cleaner approach.
 
+**New: Added support for passing function pointer! See performOp() function in `mygraph.py`**
 
 The Cpp library is a simple Graph class that creates adjacency matrix dynamically through constructor. It also has other utility functions for printing the graph, setting edge, and freeing/disposing the dynamic memory.
 
 ## Compile the shared object using gcc.
 
-1. Run the following commands to generate shared object from mygraph.cpp file (or just run the bash script `generate_so_file.sh`).
+1. Run the following commands to generate shared object from mygraph.cpp file (or just run the `make` command).
 
 - `g++ -c -fPIC mygraph.cpp -o mygraph.o`
 - `g++ -shared -Wl,-soname,libmygraph.so -o libmygraph.so mygraph.o`
 
-	Note: Conventionally, the generated shared object file's name should start with *lib*.
+	Note: Conventionally, the generated shared object file's name starts with *lib*.
 
-2. Run `test.py` to check if the graph is being used correctly. The `mygraph.py` works as a wrapper for the cpp library.
+2. Run `test.py` to check if the graph is being used correctly (or just run the `make test` command). The `mygraph.py` works as a wrapper for the cpp library.
 
 ## Compile the shared object through Python setuptools
 
-1. Run the following command to generate shared object from mygraph.cpp file. It will be generated in `\build\*\` folder (or just run the bash script `generate_so_file.sh`). In this case, the name of the shared object is automatically generated. 
+1. Run the following command to generate shared object from mygraph.cpp file. It will be generated in `\build\*\` folder (or just run the `make` command). In this case, the name of the shared object is automatically generated. 
 
 - `python3 setup.py build`
 or
@@ -26,7 +27,7 @@ or
 or
 - `py setup.py build`
 
-2. Run `test.py` to check if the graph is being used correctly. The `mygraph.py` works as a wrapper for the cpp library.
+2. Run `test.py` to check if the graph is being used correctly (or just run the `make test` command). The `mygraph.py` works as a wrapper for the cpp library.
 
 
 

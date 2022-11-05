@@ -15,10 +15,14 @@ class Graph(object):
         lib.Graph_countEdge.argtypes = [ctypes.c_void_p]
         lib.Graph_countEdge.restype = ctypes.c_int
 
+        lib.Graph_performOp.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+        lib.Graph_performOp.restype = ctypes.c_void_p
+
         lib.Graph_destroy.argtypes = [ctypes.c_void_p]
         lib.Graph_destroy.restype = ctypes.c_void_p
         
         self.obj = lib.Graph_new(val)
+        self.FUNCTION_CAST = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_int)
 
     def printGraph(self):
         lib.Graph_print(self.obj)
@@ -29,5 +33,9 @@ class Graph(object):
     def countEdge(self):
         return lib.Graph_countEdge(self.obj)
 
+    def performOp(self, op):
+        lib.Graph_performOp(self.obj, self.FUNCTION_CAST(op))
+
     def destroy(self):
         lib.Graph_destroy(self.obj)
+
