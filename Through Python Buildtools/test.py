@@ -35,7 +35,7 @@ print("\nPerforming cube on all nodes...")
 f.performOp(cube)
 
 print("\nLambda function is also supported, applying function 2x - 1...")
-f.performOp(lambda x: 2*x - 1)
+f.performOp(lambda x: 3*x - 1)
 
 
 print("\nDestroying graph...")
