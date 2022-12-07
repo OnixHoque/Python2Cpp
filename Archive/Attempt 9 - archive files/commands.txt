@@ -1,5 +1,8 @@
 Static library generation:
 	// Generate but don't link
+	gcc -c add.c -o add.o
+	gcc -c sub.c -o sub.o 
+
 	gcc -c -fPIC add.c -o add.o
 	gcc -c -fPIC sub.c -o sub.o 
 
@@ -15,6 +18,8 @@ Reference: https://medium.com/@dreamanip/c-static-library-and-dynamic-library-d7
 
 ---
 Convert Static to Dynamic:
+	gcc -L. -shared -o libmymath_shared.so -Wl,--whole-archive libmymath.a -Wl,--no-whole-archive -Wl,-rpath='.'
+	[or, individual object files]
 	gcc -shared -o libmymath_shared.so add.o sub.o -Wl,-rpath='.'
 
 	/* The followings did not work
@@ -24,8 +29,6 @@ Convert Static to Dynamic:
 
 	gcc -shared -o libmymath_shared.so -Wl,--whole-archive -lmymath
 	gcc -shared -o libmymath_shared.so -Wl,--no-whole-archive -lmymath
-
-	gcc -L. -shared -o libmymath_shared.so -Wl,--whole-archive libmymath.a -Wl,--no-whole-archive -Wl,-rpath='.'
 
 	[or,]
 
