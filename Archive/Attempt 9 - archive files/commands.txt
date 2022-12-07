@@ -1,0 +1,44 @@
+Static library generation:
+	// Generate but don't link
+	gcc -c -fPIC add.c -o add.o
+	gcc -c -fPIC sub.c -o sub.o 
+
+	ar rcs libmymath.a add.o sub.o 
+
+	gcc -c hello.c -o hello.o
+
+	gcc -o hello hello.o -L. -lmymath
+
+
+
+Reference: https://medium.com/@dreamanip/c-static-library-and-dynamic-library-d7803ae8eef5
+
+---
+Convert Static to Dynamic:
+	gcc -shared -o libmymath_shared.so add.o sub.o -Wl,-rpath='.'
+
+	/* The followings did not work
+	gcc -L. -shared -o libmymath_shared.so -lmymath
+
+	[or,]
+
+	gcc -shared -o libmymath_shared.so -Wl,--whole-archive -lmymath
+	gcc -shared -o libmymath_shared.so -Wl,--no-whole-archive -lmymath
+
+	gcc -L. -shared -o libmymath_shared.so -Wl,--whole-archive libmymath.a -Wl,--no-whole-archive -Wl,-rpath='.'
+
+	[or,]
+
+	g++ -shared -o megalib.so foo.o bar.o -Wl,--whole-archive -la_static_lib -lb_static_lib -Wl,--no-whole-archive -lc_static_lib -lother_shared_object
+	*/
+
+Reference: https://stackoverflow.com/questions/655163/convert-a-static-library-to-a-shared-library
+
+
+---
+Running with shared objects: 
+	gcc -Wall -L. -o hello hello.c -lmymath_shared
+
+Reference:
+- https://www.cprogramming.com/tutorial/shared-libraries-linux-gcc.html
+- https://serverfault.com/questions/279068/cant-find-so-in-the-same-directory-as-the-executable
