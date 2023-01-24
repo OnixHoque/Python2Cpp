@@ -1,0 +1,7 @@
+mymath.cpp
+setup.py
+mymath.egg-info/PKG-INFO
+mymath.egg-info/SOURCES.txt
+mymath.egg-info/dependency_links.txt
+mymath.egg-info/not-zip-safe
+mymath.egg-info/top_level.txt
