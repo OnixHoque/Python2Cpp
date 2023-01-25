@@ -1,5 +1,7 @@
 # Accessing C++ Library from Python Code
 
+[New! PyBind11 example added!]
+
 This repo demonstrats how we can use a C++ library from Python by generating a Cpp shared object. This can be done directly by adding a few extra flags in gcc, or using setuptools library provided in Python. The later is a much cleaner approach. We can also use PyBind11, which simplifies the process greatly!
 
 **New: Added support for passing function pointer! See performOp() function in `mygraph.py`**
@@ -31,8 +33,9 @@ or
 
 ## ***[New!]*** Compile the shared object through PyBind11 - to support C++11 features 
 
-1. Run `./make.sh`
-2. Run `python3 test.py` or `python test.py`
+1. Make sure that you have PyBind11 installed (`pip install pybind11`).
+2. Run `./make.sh`
+3. Run `python3 test.py` or `python test.py`
 
 Read the PyBind11 Documentation for more functionalities: 
 - https://pybind11.readthedocs.io/en/stable/classes.html
