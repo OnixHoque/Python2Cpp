@@ -37,6 +37,8 @@ f.performOp(cube)
 print("\nLambda function is also supported, applying function 2x - 1...")
 f.performOp(lambda x: 2*x - 1)
 
+
+
 print("\nGraph will be automatically destroyed when Python exits scope...")
 
 
