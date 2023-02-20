@@ -1,0 +1,7 @@
+setup.py
+csrc/mycoomatrix.cpp
+mycoomatrix.egg-info/PKG-INFO
+mycoomatrix.egg-info/SOURCES.txt
+mycoomatrix.egg-info/dependency_links.txt
+mycoomatrix.egg-info/not-zip-safe
+mycoomatrix.egg-info/top_level.txt

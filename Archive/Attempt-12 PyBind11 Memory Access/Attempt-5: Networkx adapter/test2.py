@@ -1,4 +1,4 @@
-from COO_Matrix import COO_Matrix
+from mycoomatrix import *
 import networkx as nx
 
 m1 = COO_Matrix()

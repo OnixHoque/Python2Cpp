@@ -1,4 +1,4 @@
-from mycoomatrix import *
+from .mycoomatrix import *
 import numpy as np
 from scipy.sparse import coo_matrix
 import networkx as nx
