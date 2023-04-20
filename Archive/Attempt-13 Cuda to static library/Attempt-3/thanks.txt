@@ -1,0 +1,1 @@
+Thanks to: https://stackoverflow.com/questions/26893588/creating-a-static-cuda-library-to-be-linked-with-a-c-program

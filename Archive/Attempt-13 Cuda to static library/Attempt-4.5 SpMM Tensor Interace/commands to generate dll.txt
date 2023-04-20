@@ -1,0 +1,10 @@
+all:
+	nvcc -Xcompiler -fPIC  -rdc=true -c -o temp.o vector_add.cu
+	nvcc -Xcompiler -fPIC -dlink -o temp2.o temp.o -lcudart
+	ar cru libsamplegpu.a temp2.o temp.o
+	ranlib libsamplegpu.a
+	g++ main.cpp -L. -lsamplegpu -o main -L/usr/local/cuda/lib64 -lcudart
+
+clean:
+	rm -f *.a *.o main
+	
