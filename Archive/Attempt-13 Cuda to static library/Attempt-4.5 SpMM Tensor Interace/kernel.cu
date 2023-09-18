@@ -11,8 +11,8 @@ __global__ void fusedmm_spmm_trusted_kernel(int m, int n, int k, int nnz,
 {
     int rid = blockDim.y*blockIdx.x+threadIdx.y;
     if (rid<m) {
-      // int cid = (blockIdx.y<<5)+threadIdx.x;
-      int cid = (blockIdx.y * k)+threadIdx.x;
+      int cid = (blockIdx.y<<5)+threadIdx.x;
+      // int cid = (blockIdx.y * k)+threadIdx.x;
       int lb = ptrb[rid];
       int hb = ptrb[(rid+1)];
       int offset = 0;

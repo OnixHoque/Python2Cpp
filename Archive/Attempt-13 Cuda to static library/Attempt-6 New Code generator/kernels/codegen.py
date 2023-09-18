@@ -1,13 +1,17 @@
 import lib.deviceQuery as device
+import os
+curPath = os.path.dirname(__file__)
 
-# print(device.getDeviceInfo())
+# curPath = Path(__file__).parent.absolute()
 
-blc_per_row = 256
+print(device.getDeviceInfo())
 
-with open('templates/spmm.template') as f:
+# blc_per_row = 256
+
+with open(curPath + '/templates/spmm.template') as f:
     code_template = f.read()
 
-with open('templates/spmm.param') as f:
+with open(curPath + '/templates/spmm.param') as f:
     param = eval(f.read())
 
 # print(param['start'])
@@ -25,7 +29,7 @@ code_file_content = '\n\n'.join(functions)
 header_file_content = param['typedef'] + '\n\n'.join(prototypes) + '\n\n' + param['array_pointer'].replace('[[function_names]]', ',\n'.join(function_names))
 all_file_content = param['typedef'] + '\n\n'.join(prototypes) + '\n\n'.join(functions) + '\n\n' + param['array_pointer'].replace('[[function_names]]', ',\n'.join(function_names))
 
-with open('generated/include/spmm_header.cuh', 'w') as f:
+with open(curPath + '/generated/include/spmm_header.cuh', 'w') as f:
     f.write(all_file_content)
 
 # print(param['typedef'])

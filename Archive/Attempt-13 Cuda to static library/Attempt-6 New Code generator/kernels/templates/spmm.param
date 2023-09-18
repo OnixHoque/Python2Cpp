@@ -1,9 +1,9 @@
 {
     'name': '[[blocksize]]',
-    'start': 8,
-    'end': 16,
-    'step': 8,
-    'count': 2,
+    'start': 1,
+    'end': 1024,
+    'step': 1,
+    'count': 1024,
     'prototype': '''void gfusedMM_bl[[blocksize]]_spmm_csr (const char transa, const INDEXTYPE m, const INDEXTYPE n, 
       const INDEXTYPE k,const float alpha, const INDEXTYPE nnz, 
       const INDEXTYPE rows, const INDEXTYPE cols, const float *val, const INDEXTYPE *indx, 

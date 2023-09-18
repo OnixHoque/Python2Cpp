@@ -7,6 +7,10 @@
 #include <iostream>
 #include <cuda_runtime.h>
 
+#include <chrono>
+using namespace std::chrono;
+// typedef std::ratio<1l, 1000000000000l> pico;
+// typedef duration<long long, pico> picoseconds;
 
 /*void fusedmm_cuda(int m, int n, int k, int nnz,
                                const int64_t* indx, const int64_t* ptrb, const float* val,
@@ -44,7 +48,7 @@ void fusedmm_cuda
 }
 
 
-void cuda_spmm_test()
+auto cuda_spmm_test(int kk)
 {
 
     // Allocate host (CPU) memory
@@ -87,20 +91,23 @@ void cuda_spmm_test()
 
     // Launch kernel
     // fusedmm_cuda('m', m, n, k, 1, nnz, 0, 0,val_device, indx_device, ptrb_device,ptrb_device+1 , 0, 0,  mat_device, 0, 0, out_device, 0);
-    std::cout << "Invoking generted kernel...\n";
-    gfusedMM_spmm[1]('m', m, n, k, 1, nnz, 0, 0,val_device, indx_device, ptrb_device,ptrb_device+1 , 0, 0,  mat_device, 0, 0, out_device, 0);
+    // std::cout << "Invoking generted kernel...\n";
+    auto start = high_resolution_clock::now();
+    gfusedMM_spmm[(kk / 8) - 1]('m', m, n, k, 1, nnz, 0, 0,val_device, indx_device, ptrb_device,ptrb_device+1 , 0, 0,  mat_device, 0, 0, out_device, 0);
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<nanoseconds>(stop - start);
 
     // Copy output data from device to host
     cudaMemcpy(out, out_device, m * k * sizeof(float), cudaMemcpyDeviceToHost);
     
     // Print output
-    for (int i = 0; i < m; i++) {
-	    for(int j=0; j<k; j++){
-        	std::cout << out[i][j] << " ";
-	    }
-	    std::cout << "\n";
-    }
-    std::cout << std::endl;
+    // for (int i = 0; i < m; i++) {
+	  //   for(int j=0; j<k; j++){
+    //     	std::cout << out[i][j] << " ";
+	  //   }
+	  //   std::cout << "\n";
+    // }
+    // std::cout << std::endl;
 
     // Free memory
     cudaFree(ptrb_device);
@@ -110,4 +117,5 @@ void cuda_spmm_test()
     cudaFree(out_device);
 
     //return 0;
+    return duration.count();
 }

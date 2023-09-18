@@ -1,16 +1,18 @@
+# Source: https://github.com/PacktPublishing/Hands-On-GPU-Programming-with-Python-and-CUDA/blob/master/Chapter03/deviceQuery.py
+
 import pycuda
 import pycuda.driver as drv
-drv.init()
+
 def getDeviceInfo():
+    drv.init()
     # print ('CUDA device query (PyCUDA version) \n')
 
     # print ('Detected {} CUDA Capable device(s) \n'.format(drv.Device.count()))
-
+    ret = []
     for i in range(drv.Device.count()):
-        
         gpu_device = drv.Device(i)
         # print( 'Device {}: {}'.format( i, gpu_device.name() ) )
-        compute_capability = float( '%d.%d' % gpu_device.compute_capability() )
+        # compute_capability = float( '%d.%d' % gpu_device.compute_capability() )
         # print( '\t Compute Capability: {}'.format(compute_capability))
         # print( '\t Total Memory: {} megabytes'.format(gpu_device.total_memory()//(1024**2)))
         
@@ -40,4 +42,5 @@ def getDeviceInfo():
         
         # for k in device_attributes.keys():
         #     print( '\t {}: {}'.format(k, device_attributes[k]))
-        return device_attributes
+        ret += [device_attributes]
+    return ret
