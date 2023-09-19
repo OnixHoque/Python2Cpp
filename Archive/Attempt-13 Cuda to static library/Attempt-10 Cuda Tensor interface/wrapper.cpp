@@ -38,7 +38,7 @@ void test_adder() {
 
 }
 
-void addArraysOnGPU_wrapper(py::array_t<float> A, py::array_t<float> B, py::array_t<float> C, int N){
+void addArraysOnGPU_wrapper(py::array_t<float> &A, py::array_t<float> &B, py::array_t<float> &C, int N){
     float* a = static_cast<float*>(A.mutable_data());
     float* b = static_cast<float*>(B.mutable_data());
     float* c = static_cast<float*>(C.mutable_data());
