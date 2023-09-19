@@ -9,11 +9,11 @@ print("OK. Now passing arguemnt from Python..")
 
 a = torch.tensor([1, 2, 3, 4, 5], dtype=torch.float32)
 b = torch.tensor([10, 20, 30, 40, 50], dtype=torch.float32)
+c = torch.zeros_like(a)
 
 a = a.numpy()
 b = b.numpy()
-
-c = np.zeros(a.shape[0], dtype=np.float32)
+c = c.numpy()
 
 N = a.shape[0]
 
