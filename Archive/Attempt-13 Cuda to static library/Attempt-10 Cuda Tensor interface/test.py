@@ -13,10 +13,14 @@ b = torch.tensor([10, 20, 30, 40, 50], dtype=torch.float32)
 a = a.numpy()
 b = b.numpy()
 
-c = np.zeros(a.shape[0])
+c = np.zeros(a.shape[0], dtype=np.float32)
 
 N = a.shape[0]
 
+print(f'Adding a={a} with b={b}. Populating c={c}...')
+
 adr.addArraysOnGPU(a, b, c, N)
+
+print(f'Result is c={c}')
 
 

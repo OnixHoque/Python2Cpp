@@ -42,14 +42,15 @@ void addArraysOnGPU_wrapper(py::array_t<float> A, py::array_t<float> B, py::arra
     float* a = static_cast<float*>(A.mutable_data());
     float* b = static_cast<float*>(B.mutable_data());
     float* c = static_cast<float*>(C.mutable_data());
-
+    // std::cout << A.flags()..writable() << std::endl;
+    // a[0] = 1000;
     addArraysOnGPU(a, b, c, N);
 
-    std::cout << "Array C" << std::endl;
-
-    for (int i = 0; i < 4; ++i) {
-        std::cout << c[i] << " ";
-    }
+    // std::cout << "Array C" << std::endl;
+    // c = static_cast<float*>(C.mutable_data());
+    // for (int i = 0; i < N; ++i) {
+    //     std::cout << c[i] << " ";
+    // }
 }
 
 PYBIND11_MODULE(myadder, m) {
