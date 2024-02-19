@@ -5,13 +5,13 @@
 #include "omp.h"
 //#include "../include/defs.h"
 //#include "../../../include/defs.h"
-#include "../../include/defs.h"
-#include "../../include/utils.h"
-#include "../../include/GAP/timer.h"
-#include "../../include/GAP/util.h"
-#include "../../include/GAP/pvector.h"
-#include "../../include/GAP/platform_atomics.h"
-#include "../../include/NIST/mmio.h"
+#include "include/defs.h"
+#include "include/utils.h"
+#include "include/GAP/timer.h"
+#include "include/GAP/util.h"
+#include "include/GAP/pvector.h"
+#include "include/GAP/platform_atomics.h"
+#include "include/NIST/mmio.h"
 
 
 
